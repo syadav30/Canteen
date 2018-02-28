@@ -1,0 +1,56 @@
+<div class="col-md-8 col-md-offset-2">
+	<div class="panel panel-default">
+		<h3 class="panel-heading mt0 mb0 font-light">
+			<span class="glyphicon glyphicon-user mr5"></span>
+			{{ data.profileDetail.name }}
+			<span class="pull-right">
+				<span class="glyphicon glyphicon-phone ml10"></span>
+				<span ng-bind-html="data.profileDetail.mobile | canteenMobile"></span>
+			</span>
+		</h3>
+		<table class="table table-bordered table-hover table-responsive">
+			<thead>
+				<tr>
+					<th><span class="small text-primary">#</span>Id</th>
+					<th>Status</th>
+					<th>Items</th>
+					<th>Total</th>
+					<th>Actions</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-repeat="o in data.myOrders | filter: formData.orderSearch" ng-class="methods.orderStatusNgClass(o.status, '');">
+					<td ng-bind-html="o.id | canteenOrderId:true"></td>
+					<td><strong>{{ o.status }}</strong> <span class="small">from {{ o.statusTime[o.status] | date:'dd, MMM yyyy' }}</span></td>
+					<td class="pt0 pr0 pb0 pl0 vam">
+						<table class="table table-bordered table-hover table-responsive table-condensed mb0 small">
+							<tbody>
+								<tr ng-repeat="p in o.products">
+									<td>
+										<strong>{{ p.name }}</strong>
+										<span class="mr5 ml5">x</span>
+										<strong>{{ p.quantity }}</strong>
+									</td>
+									<td>
+										<strong>Rs. {{ p.total }}</strong>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</td>
+					<td>Rs. {{ o.total }}</td>
+					<td class="text-center">
+						<a class="glyphicon glyphicon-eye-open cursor-pointer text-primary mr5 small" ng-href="#!/admin/order/{{ o.id }}"></a>
+					</td>
+				</tr>
+			</tbody>
+			<tfoot>
+				<tr class="warning">
+					<th ng-hide="data.myOrders.length" colspan="5" class="text-center">
+						<strong>No Orders Found !</strong>
+					</th>
+				</tr>
+			</tfoot>
+		</table>
+	</div>
+</div>

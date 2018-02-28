@@ -1,0 +1,243 @@
+<html ng-app="canteen">
+	<head>
+		<link rel="stylesheet" href="css/style.css">
+		<style type="text/css">
+			.dib {
+				display: inline-block !important;
+			}
+			.vam {
+				vertical-align: middle !important;
+			}
+			.dropdown-menu.dropdown-menu-lg {
+				min-width: 250px;
+			}
+			a:hover, a:active, a:focus {
+				text-decoration: none;
+			}
+		</style>
+
+		<!-- JavaScript Components -->
+		<script src = "js/lib/jquery/jquery.min.js"></script>
+		<script src	="js/lib/bootstrap/bootstrap.min.js"></script>
+		<script src	="js/lib/message/canteenMessage.js"></script>
+
+		<!-- Angular Components -->
+		<script src="js/lib/angular/angular.min.js"></script>
+		<script src="js/lib/angular/angular-route.js"></script>
+		<script src="js/lib/angular/ngStorage.min.js"></script>
+		
+		
+		<!-- Canteen Components -->
+		<script src="js/canteen/module/canteen.js"></script>
+		<script src="js/canteen/factory/auth.js"></script>
+		<script src="js/canteen/factory/user.js"></script>
+		<script src="js/canteen/factory/product.js"></script>
+		<script src="js/canteen/factory/order.js"></script>
+		<script src="js/canteen/controller/common.js"></script>
+		<script src="js/canteen/controller/signIn.js"></script>
+		
+		<!-- Admin Components -->
+		<script src="js/admin/module/admin.js"></script>
+		<script src="js/admin/controller/dashboard.js"></script>
+		<script src="js/admin/controller/user.js"></script>
+		<script src="js/admin/controller/product.js"></script>
+		<script src="js/admin/controller/order.js"></script>
+		<script src="js/admin/controller/order-take.js"></script>
+		<script src="js/admin/controller/order-detail.js"></script>
+		<script src="js/admin/controller/profile-detail.js"></script>
+		<script src="js/admin/controller/kitchen.js"></script>
+		<script src="js/admin/controller/delivery.js"></script>
+
+		<!-- Customer Components -->
+		<script src="js/customer/module/customer.js"></script>
+		<script src="js/customer/controller/dashboard.js"></script>
+		<script src="js/customer/controller/profile.js"></script>
+		<script src="js/customer/controller/cart.js"></script>
+		<script src="js/customer/controller/orders.js"></script>
+
+		</head>
+
+	<body ng-controller="canteenCtrlcommon">
+		<nav class="navbar navbar-default mb15">
+			  <div class="container-fluid">
+				<div class="navbar-header">
+				  <a class="navbar-brand" ng-href="#!/">
+				  	<span class="glyphicon glyphicon-copyright-mark large"></span>Canteen
+				  	<sup><span class="glyphicon glyphicon-registration-mark small"></span></sup>
+				  </a>
+				</div>
+				<ul class="nav navbar-nav">
+				  <li ng-show="data.user.mobile && !data.user.isAdmin">
+				  	<a ng-href="#!/customer/">
+				  		<span class="glyphicon glyphicon-home mr5"></span>
+				  		Home
+				  	</a>
+				  </li>
+				  <li ng-show="data.user.mobile && !data.user.isAdmin">
+				  	<a ng-href="#!/customer/orders">
+				  		<span class="glyphicon glyphicon-cutlery mr5"></span>
+				  		My Orders
+				  	</a>
+				  </li>
+				  <li ng-show="data.user.mobile && !data.user.isAdmin" class="dropdown">
+					<a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+				  		<span class="glyphicon glyphicon-shopping-cart mr5"></span>
+				  		Cart
+				  		<span class="badge ml5" ng-show="formData.cart.total">Rs. <strong>{{ formData.cart.total }}</strong></span>
+					</a>
+					<ul class="dropdown-menu pt0 pb0 dropdown-menu-lg">
+					<li>
+						<div class="alert alert-warning mb0" ng-show="!formData.cart.products.length">
+							No Product Added !
+						</div>
+						<table class="table table-bordered table-hover table-responsive table-condensed mb0 small">
+							<tbody>
+								<tr ng-repeat="p in formData.cart.products">
+									<td>
+										<span class="text-primary">#{{ p.id }}</span>
+										{{ p.name }}
+										<span class="mr5 ml5">x</span>
+										{{ p.quantity }}
+									</td>
+									<td>
+										Rs. {{ p.total }}
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</li>
+					<li ng-show="formData.cart.products.length">
+						<div class="col-md-4 pr0 pl0">
+							<button type="button" class="btn btn-danger btn-block" ng-click="methods.cart.clear();">
+								<span class="glyphicon glyphicon-remove-circle mr5"></span>
+								Clear
+							</button>			
+						</div>
+						<div class="col-md-8 pr0 pl0">
+							<button type="button" class="btn btn-primary btn-block" ng-click="methods.location('/customer/cart/');">
+								<span class="glyphicon glyphicon-menu-right"></span>
+								Checkout
+							</button>
+						</div>
+					</li>
+					</ul>
+				  </li>
+
+				  <li ng-show="data.user.mobile && data.user.isAdmin">
+				  	<a ng-href="#!/admin/dashboard">
+				  		<span class="glyphicon glyphicon-dashboard mr5"></span>
+				  		Dashboard
+				  	</a>
+				  </li>
+				  <li ng-show="data.user.mobile && data.user.isAdmin">
+				  	<a ng-href="#!/admin/user">
+				  		<span class="glyphicon glyphicon-user mr5"></span> User
+				  	</a>
+				  </li>
+				  <li ng-show="data.user.mobile && data.user.isAdmin">
+				  	<a ng-href="#!/admin/product">
+				  		<span class="glyphicon glyphicon-barcode mr5"></span> Product
+				  	</a>
+				  </li>
+				  <li class="dropdown" ng-show="data.user.mobile && data.user.isAdmin">
+					  <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+						  <span class="glyphicon glyphicon-cutlery mr5"></span>
+						  Order
+						  <span class="caret"></span>
+					  </a>
+				  <ul class="dropdown-menu pt0 pb0">
+					  <li ng-show="data.user.mobile && data.user.isAdmin">
+					  	<button type="button" class="btn btn-primary btn-block btn-lg" ng-click="methods.location('/admin/order/take');">
+					  		<span class="glyphicon glyphicon-list-alt mr5"></span> Take Order
+					  	</button>
+					  </li>
+					  <li>
+					  	<a ng-href="#!/admin/kitchen" class="pt10 pb10">
+					  		<span class="glyphicon glyphicon-fire mr5"></span>
+					  		 Kitchen
+					  	</a>
+					  </li>
+					  <li>
+					  	<a ng-href="#!/admin/kitchen" class="pt10 pb10">
+					  		<span class="glyphicon glyphicon-plane mr5"></span>
+					  		Delivery
+					  	</a>
+					  </li>
+					  <li role="separator" class="divider mt0 mb0"></li>
+					  <li>
+					  	<a ng-href="#!/admin/order" class="pt10 pb10">
+						  	<span class="glyphicon glyphicon-cutlery mr5"></span>
+					  		List
+					  	</a>
+					  </li>
+				  </ul>
+				  </li>
+				</ul>
+				<ul class="nav navbar-nav navbar-right">
+				  <li ng-show="data.user.mobile">
+				  	<a ng-href="#!/customer/profile">
+				  		<span class="glyphicon glyphicon-user mr5"></span> Profile
+				  	</a>
+				  </li>
+				  <li ng-show="data.user.mobile && data.user.isAdmin" class="mr5">
+					<div class="btn-group navbar-btn">
+						<button type="button" class="btn btn-danger dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+							<span class="glyphicon glyphicon-floppy-remove mr5"></span>
+							Clear Data <span class="caret ml5"></span>
+						</button>
+						<ul class="dropdown-menu pt0 pb0">
+							<li>
+								<button type="button" class="btn btn-danger btn-block" ng-click="methods.user.clear('users');">
+									<span class="glyphicon glyphicon-user mr5"></span>
+									Clear Users
+								</button>
+							</li>
+							<li>
+								<button type="button" class="btn btn-danger btn-block" ng-click="methods.user.clear('products');">
+									<span class="glyphicon glyphicon-barcode mr5"></span>
+									Clear Products
+								</button>
+							</li>
+							<li>
+								<button type="button" class="btn btn-danger btn-block" ng-click="methods.user.clear('orders');">
+									<span class="glyphicon glyphicon-cutlery mr5"></span>
+									Clear Orders
+								</button>
+							</li>
+							<li role="separator" class="divider mt5 mb5"></li>
+							<li>
+								<button type="button" class="btn btn-danger btn-block" ng-click="methods.user.clear('all');">
+									<span class="glyphicon glyphicon-floppy-remove mr5"></span>
+									Clear All
+								</button>
+							</li>
+						</ul>
+					</div>
+				  </li>
+				  <li ng-show="data.user.mobile" class="mr15">
+				  	<button type="button" class="btn btn-default navbar-btn mr5" ng-click="methods.user.signOut();">
+				  		<span class="glyphicon glyphicon-log-out mr5"></span> Sign Out
+				  	</button>
+				  </li>
+				  <li ng-hide="data.user.mobile">
+				  	<a ng-href="#!/signIn">
+				  		<span class="glyphicon glyphicon-log-in mr5"></span> Sign In
+				  	</a>
+				  </li>
+				  <li ng-hide="data.user.mobile" class="mr15">
+				  	<a ng-href="#!/signUp">
+				  		<span class="glyphicon glyphicon-send mr5"></span> Sign Up
+				  	</a>
+				  </li>
+				</ul>
+			  </div>
+		</nav>
+		
+		<div class="container">
+			<div class="row">
+				<div ng-view></div>
+			</div>
+		</div>
+	</body>
+
+</html>

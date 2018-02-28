@@ -1,0 +1,151 @@
+<div class="col-md-6 col-md-offset-3">
+	<div class="panel panel-default mb15">
+		<div class="panel-heading pt0 pr0">
+			<span class="mt10 dib">
+				<span class="glyphicon glyphicon-barcode mr5"></span>
+				Products
+			</span>
+			<button type="button" class="btn btn-primary btn-sm mt5 pull-right mr5" ng-click="methods.view.products.addUpdateOpenModal();"><span class="glyphicon glyphicon-plus mr5"></span> Add Product</button>
+			<button type="button" class="btn btn-default btn-sm mt5 pull-right mr5" ng-click="methods.view.products.get();"><span class="glyphicon glyphicon-refresh mr5"></span> Refresh</button>
+		</div>
+		<div class="panel-body pt0 pr0 pb0 pl0">
+			<form class="form-horizontal mb0">
+				<div class="form-group has-feedback mb0">
+					<div class="col-md-12">
+						<input type="text" class="form-control" placeholder="Search Products" ng-model="formData.productsSearch" />
+						<span class="glyphicon glyphicon-search form-control-feedback" aria-hidden="true"></span>
+					</div>
+				</div>
+			</form>
+		</div>
+		<table class="table table-bordered table-hover table-responsive">
+			<thead>
+				<tr>
+					<th><span class="small text-primary">#</span>Id</th>
+					<th>Name</th>
+					<th>Price</th>
+					<th>Actions</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-repeat="u in data.products | filter: formData.productsSearch">
+					<td>{{ u.id }}</td>
+					<td>
+						<strong>{{ u.name }}</strong>
+					</td>
+					<td ng-bind-html="u.price | canteenCurrency"></td>
+					<td class="text-center">
+						<span class="glyphicon glyphicon-eye-open cursor-pointer text-primary mr5 small"></span>
+						<span class="glyphicon glyphicon-pencil cursor-pointer text-primary mr5 small" ng-click="methods.view.products.addUpdateOpenModal(u);"></span>
+						<span class="glyphicon glyphicon-trash cursor-pointer text-danger small" ng-click="methods.view.products.removeOpenModal(u);"></span>
+					</td>
+				</tr>
+			</tbody>
+			<tfoot>
+				<tr class="warning">
+					<th ng-hide="data.products.length" colspan="4" class="text-center">
+						<strong>No Product Found !</strong>
+					</th>
+				</tr>
+			</tfoot>
+		</table>
+	</div>
+</div>
+
+<div class="modal fade" id="modal-add-products" tabindex="-1" role="dialog" aria-labelledby="modal-add-products-Label">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+    <form novalidate="" name="add" ng-submit="methods.view.products.addUpdate(add.$valid, formData.products.add.isEdit);" class="mb0">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="modal-add-products-Label">
+	        <span class="glyphicon mr5" ng-class="{'glyphicon-pencil': formData.products.add.isEdit, 'glyphicon-plus': !formData.products.add.isEdit}"></span>
+        	<span ng-show="!formData.products.add.isEdit">Add</span><span ng-show="formData.products.add.isEdit">Update</span> Product
+        </h4>
+      </div>
+      <div class="modal-body">
+
+      		<div class="form-group" ng-class="{'has-error': add.name.$dirty && add.name.$invalid}">
+				<label for="Name">Name <span class="text-danger">*</span></label>
+				<div class="input-group">
+					<div class="input-group-addon">
+						<span class="glyphicon glyphicon-pencil"></span>
+					</div>
+					<input type="text" class="form-control" id="Name" placeholder="Product Name" autofocus=""
+						   ng-model="formData.products.add.name" name="name" ng-minlength="3" ng-maxlength="20">
+				</div>
+				<div class="alert alert-danger small mb0 pt5 pr10 pb5 pl10" ng-show="add.name.$dirty && add.name.$invalid">
+					<span ng-show="add.name.$error.minlength">Minimum 3 characters Required !</span>
+					<span ng-show="add.name.$error.maxlength">Maximum 20 characters are allowed !</span>
+				</div>
+			</div>
+      		<div class="form-group" ng-class="{'has-error': add.id.$dirty && add.id.$invalid}">
+				<label for="id"><span class="small text-primary">#</span>id <span class="text-danger">*</span></label>
+				<div class="input-group">
+					<div class="input-group-addon">
+						<span class="glyphicon glyphicon-link"></span>
+					</div>
+					<input type="number" class="form-control" id="id" placeholder="Product Id" required=""
+						   ng-model="formData.products.add.id" name="id">
+				</div>
+				<div class="alert alert-danger small mb0 pt5 pr10 pb5 pl10" ng-show="add.id.$dirty && add.id.$invalid">
+					<span ng-show="add.id.$error.required">Id is Required !</span>
+				</div>
+			</div>
+			<div class="clearfix"></div>
+      		<div class="form-group" ng-class="{'has-error': add.price.$dirty && add.price.$invalid}">
+				<label for="price">Price <span class="text-danger">*</span></label>
+				<div class="input-group">
+					<div class="input-group-addon">
+						<span class="small">Rs.</span>
+					</div>
+					<input type="number" class="form-control" id="price" placeholder="Product Price" required="" ng-model="formData.products.add.price" name="price">
+				</div>
+				<div class="alert alert-danger small mb0 pt5 pr10 pb5 pl10" ng-show="add.price.$dirty && add.price.$invalid">
+					<span ng-show="add.price.$error.required">Price is Required !</span>
+				</div>
+			</div>
+      </div>
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-primary" ng-show="!formData.products.add.isEdit">
+        	<span class="glyphicon glyphicon-plus mr5"></span> Add
+        </button>
+        <button type="submit" class="btn btn-primary" ng-show="formData.products.add.isEdit">
+        	<span class="glyphicon glyphicon-save mr5"></span> Update
+        </button>
+        <button type="button" class="btn btn-warning" ng-click="methods.clearForm(formData.products.add);">
+        	<span class="glyphicon glyphicon-remove mr5"></span> Clear
+        </button>
+        <button type="button" class="btn btn-default" data-dismiss="modal">
+        	<span class="glyphicon glyphicon-remove-circle mr5"></span> Close
+        </button>
+      </div>
+    </form>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="modal-remove-products" tabindex="-1" role="dialog" aria-labelledby="modal-remove-products-Label">
+  <div class="modal-dialog modal-sm" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="modal-remove-products-Label">
+        	<span class="glyphicon glyphicon-trash mr5"></span>
+        	Remove Product
+        </h4>
+      </div>
+      <div class="modal-body">
+      	Are you sure you want to <strong class="text-danger">Remove</strong> <strong>{{ formData.products.remove.name }}</strong> ?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" ng-click="methods.view.products.remove();">
+        	<span class="glyphicon glyphicon-ok mr5"></span> Yes
+        </button>
+        <button type="button" class="btn btn-default" data-dismiss="modal">
+        	<span class="glyphicon glyphicon-remove mr5"></span> No
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

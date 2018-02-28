@@ -1,0 +1,58 @@
+<div class="col-md-6 col-md-offset-3">
+	<div class="panel mb15" ng-class="methods.orderStatusNgClass(data.orderDetail.status, 'panel-');">
+		<div class="panel-heading pt0 pr0">
+			<h3 class="panel-heading mt0 text-center font-light">
+				<span class="glyphicon glyphicon-cutlery mr5"></span>
+				Order
+				<span class="small" ng-bind-html="data.orderDetail.id | canteenOrderId"></span>
+			</h3>
+			<span class="mt10 dib">
+				<span class="glyphicon glyphicon-user mr5"></span>
+				<span ng-show="data.orderDetail.for.mobile">
+					<a ng-href="#!/admin/profile/{{data.orderDetail.for.mobile}}">
+						{{ data.orderDetail.for.name }}
+					</a>
+					<span class="small glyphicon glyphicon-phone ml10 mr5"></span>
+					<span ng-bind-html="data.orderDetail.for.mobile | canteenMobile"></span>
+				</span>
+			</span>
+			<span class="pull-right mt10 mr10">
+				Total
+				<strong ng-bind-html="data.orderDetail.total | canteenCurrency"></strong>
+			</span>
+		</div>
+		<table class="table table-bordered table-hover table-responsive">
+			<thead>
+				<tr>
+					<th>Name</th>
+					<th>Price</th>
+					<th>Quantity</th>
+					<th>Totle</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-repeat="p in data.orderDetail.products">
+					<td>{{ p.name }}</td>
+					<td>{{ p.price }}</td>
+					<td>{{ p.quantity }}</td>
+					<td ng-bind-html="p.total | canteenCurrency"></td>
+				</tr>
+			</tbody>
+			<tfoot>
+				<tr>
+					<td class="text-right" colspan="3">
+						<strong>Total : </strong>
+					</td>
+					<td>
+						<strong ng-bind-html="data.orderDetail.total | canteenCurrency"></strong>
+					</td>
+				</tr>
+			</tfoot>
+		</table>
+		<div class="alert text-center mb0 pt10 pr10 pb10 pl10" ng-class="methods.orderStatusNgClass(data.orderDetail.status, 'alert-');">
+			<strong>{{ data.orderDetail.status }}</strong>
+			<div class="clearfix"></div>
+			<span class="small">{{ data.orderDetail.statusTime[data.orderDetail.status] | date: data.config.dateTimeFilter }}</span>
+		</div>
+	</div>
+</div>

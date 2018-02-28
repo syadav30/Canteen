@@ -1,0 +1,70 @@
+<div class="col-md-6 col-md-offset-3">
+	<div class="panel panel-default">
+		<div class="panel-heading pt0 pr0">
+			<span class="mt10 dib">
+				<span class="glyphicon glyphicon-user mr5"></span>
+				Orders
+			</span>
+			<button type="button" class="btn btn-default btn-sm mt5 pull-right mr5" ng-click="methods.view.order.get();"><span class="glyphicon glyphicon-refresh mr5"></span> Refresh</button>
+		</div>
+		<div class="panel-body pt0 pr0 pb0 pl0">
+			<form class="form-horizontal mb0">
+				<div class="form-group has-feedback mb0">
+					<div class="col-md-12">
+						<input type="text" class="form-control" placeholder="Search Order" ng-model="formData.orderSearch" />
+						<span class="glyphicon glyphicon-search form-control-feedback" aria-hidden="true"></span>
+					</div>
+				</div>
+			</form>
+		</div>
+		<table class="table table-bordered table-hover table-responsive">
+			<thead>
+				<tr>
+					<th><span class="small text-primary">#</span>Id</th>
+					<th>Status</th>
+					<th>Items</th>
+					<th>Total</th>
+					<th>Actions</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-repeat="o in data.myOrders | filter: formData.orderSearch" ng-class="{
+					'info': o.status == 'Pending',
+					'warning': o.status == 'Ready',
+					'success': o.status == 'Delivered',
+					'danger': o.status == 'Canceled'
+				}">
+					<td>{{ o.id }}</td>
+					<td><strong>{{ o.status }}</strong> <span class="small">from {{ o.statusTime[o.status] | date:'dd, MMM yyyy' }}</span></td>
+					<td class="pt0 pr0 pb0 pl0 vam">
+						<table class="table table-bordered table-hover table-responsive table-condensed mb0 small">
+							<tbody>
+								<tr ng-repeat="p in o.products">
+									<td>
+										<strong>{{ p.name }}</strong>
+										<span class="mr5 ml5">x</span>
+										<strong>{{ p.quantity }}</strong>
+									</td>
+									<td>
+										<strong>Rs. {{ p.total }}</strong>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</td>
+					<td>Rs. {{ o.total }}</td>
+					<td class="text-center">
+						<a class="glyphicon glyphicon-eye-open cursor-pointer text-primary mr5 small" ng-href="#!/admin/order/{{ o.id }}"></a>
+					</td>
+				</tr>
+			</tbody>
+			<tfoot>
+				<tr class="warning">
+					<th ng-hide="data.myOrders.length" colspan="5" class="text-center">
+						<strong>No Orders Found !</strong>
+					</th>
+				</tr>
+			</tfoot>
+		</table>
+	</div>
+</div>

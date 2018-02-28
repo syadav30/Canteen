@@ -1,0 +1,57 @@
+<div class="col-md-6 col-md-offset-3">
+	<div class="panel panel-default mb0" ng-show="formData.cart.products.length">
+		<div class="panel-heading pt0 pr0">
+			<span class="mt10 dib">
+				<span class="glyphicon glyphicon-list-alt mr5"></span> Cart
+			</span>
+			<button type="button" class="btn btn-danger btn-sm mt5 pull-right mr5" ng-click="methods.view.customerDashboard.cart.clear();">
+				<span class="glyphicon glyphicon-remove-circle mr5"></span>
+				Clear
+			</button>
+			<span class="pull-right mt10 mr10">
+				Total
+				<strong>Rs. {{ formData.cart.total }}</strong>
+			</span>
+		</div>
+		<table class="table table-bordered table-hover table-responsive">
+			<thead>
+				<tr>
+					<th>Name</th>
+					<th>Price</th>
+					<th>Quantity</th>
+					<th>Totle</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-repeat="p in formData.cart.products">
+					<td>{{ p.name }}</td>
+					<td>Rs. {{ p.price }}</td>
+					<td>{{ p.quantity }}</td>
+					<td>Rs. {{ p.total }}</td>
+				</tr>
+			</tbody>
+			<tfoot>
+				<tr>
+					<td class="text-right" colspan="3">Total : </td>
+					<td><strong>Rs. {{ formData.cart.total }}</strong></td>
+				</tr>
+			</tfoot>
+		</table>
+	</div>
+	<div class="clearfix"></div>
+	<div class="col-md-4 pr0 pl0" ng-show="formData.cart.products.length">
+		<button class="btn btn-default btn-lg btn-block" ng-click="methods.location('/customer/');">
+			<span class="glyphicon glyphicon-menu-left mr5"></span>
+			Add More
+		</button>
+	</div>
+	<div class="col-md-8 pr0 pl0" ng-show="formData.cart.products.length">
+		<button class="btn btn-primary btn-lg btn-block" ng-click="methods.view.cart.addOrder();">
+			<span class="glyphicon glyphicon-cutlery mr5"></span>
+			Confirm Order
+		</button>
+	</div>
+	<div class="alert alert-warning" ng-show="!formData.cart.products.length">
+		No Product Added !
+	</div>
+</div>

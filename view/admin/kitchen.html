@@ -1,0 +1,107 @@
+<div class="col-md-6 col-md-offset-3">
+	<div class="col-md-6 pr0 pl0">
+		<button type="button" class="btn btn-block" ng-class="{'btn-primary': formData.kitchen.tab.active == 'Cooking', 'btn-default': formData.kitchen.tab.active != 'Cooking'}" ng-click="formData.kitchen.tab.active = 'Cooking'; methods.view.kitchen.cooking.get();">
+			<span class="glyphicon glyphicon-heart-empty mr5"></span>
+			Cooking Products
+		</button>
+	</div>
+	<div class="col-md-6 pr0 pl0">
+		<button type="button" class="btn btn-block" ng-class="{'btn-primary': formData.kitchen.tab.active == 'Cooked', 'btn-default': formData.kitchen.tab.active != 'Cooked'}" ng-click="formData.kitchen.tab.active = 'Cooked'; methods.view.kitchen.cooked.get();">
+			<span class="glyphicon glyphicon-heart mr5"></span>
+			Cooked Orders
+		</button>
+	</div>
+	<div class="panel panel-default" ng-show="formData.kitchen.tab.active == 'Cooking';">
+		<div class="panel-heading pt0 pr0">
+			<span class="mt10 dib">
+				<span class="glyphicon glyphicon-heart-empty mr5"></span>
+				Cooking Products <span class="small">(Products need to be cooked.)</span>
+			</span>
+			<button type="button" class="btn btn-default btn-sm mt5 pull-right mr5" ng-click="methods.view.kitchen.cooking.get();"><span class="glyphicon glyphicon-refresh mr5"></span> Refresh</button>
+		</div>
+		<table class="table table-bordered table-hover table-responsive">
+			<thead>
+				<tr>
+					<th>Name</th>
+					<th>Quantity</th>
+					<th>Action</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-repeat="c in data.cooking">
+					<td>
+						<span class="small">
+							<span class="text-primary">#</span>{{ c.id }}
+						</span>
+						<strong>{{ c.name }}</strong>
+					</td>
+					<td class="text-center">
+						<strong>{{ c.cooking }}</strong>
+					</td>
+					<td class="pt0 pr0 pb0 pl0">
+						<button type="button" class="btn btn-primary btn-block btn-lg" ng-click="methods.view.kitchen.cooking.cooked(c);">
+							<span class="glyphicon glyphicon-heart mr5"></span>
+							Cooked
+						</button>
+					</td>
+				</tr>
+			</tbody>
+			<tfoot ng-hide="data.cooking.length">
+				<tr>
+					<th colspan="3" class="success text-center">
+						Enjoy, Nothing to Cook !
+					</th>
+				</tr>
+			</tfoot>
+		</table>
+	</div>
+	<div class="panel panel-default" ng-show="formData.kitchen.tab.active == 'Cooked';">
+		<div class="panel-heading pt0 pr0">
+			<span class="mt10 dib">
+				<span class="glyphicon glyphicon-heart mr5"></span>
+				Cooked Orders <span class="small">(Orders need to be ready.)</span>
+			</span>
+			<button type="button" class="btn btn-default btn-sm mt5 pull-right mr5" ng-click="methods.view.kitchen.cooked.get();"><span class="glyphicon glyphicon-refresh mr5"></span> Refresh</button>
+		</div>
+		<table class="table table-bordered table-hover table-responsive">
+			<thead>
+				<tr>
+					<th><span class="small text-primary">#</span>Id</th>
+					<th>Items</th>
+					<th>Action</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-repeat="o in data.cooked">
+					<td ng-bind-html="o.id | canteenOrderId"></td>
+					<td class="pt0 pr0 pb0 pl0 vam">
+						<table class="table table-bordered table-hover table-responsive table-condensed mb0 small">
+							<tbody>
+								<tr ng-repeat="p in o.products">
+									<td>
+										<strong>{{ p.name }}</strong>
+										<span class="mr5 ml5">x</span>
+										<strong>{{ p.quantity }}</strong>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</td>
+					<td class="pt0 pr0 pb0 pl0 vam">
+						<button type="button" class="btn btn-primary btn-block btn-lg" ng-click="methods.view.kitchen.cooked.ready(o);">
+							<span class="glyphicon glyphicon-ok-circle mr5"></span>
+							Ready
+						</button>
+					</td>
+				</tr>
+			</tbody>
+			<tfoot ng-hide="data.cooked.length">
+				<tr>
+					<th colspan="3" class="success text-center">
+						Enjoy, Nothing to make Ready !
+					</th>
+				</tr>
+			</tfoot>
+		</table>
+	</div>
+</div>

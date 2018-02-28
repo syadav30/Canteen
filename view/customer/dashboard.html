@@ -1,0 +1,14 @@
+<div class="col-md-4 pr0 well well-sm mb0" ng-repeat="p in data.products | filter: formData.productsSearch">
+	<div class="col-md-6 pr0 pl0">
+		<h4 class="font-light mt0 mb5 dib">{{ p.name }}</h4>
+		<span class="text-primary">#</span><strong>{{ p.id }}</strong>
+		<div class="clearfix"></div>
+		<strong>Rs. {{ p.price }}</strong>
+	</div>
+	<div class="col-md-6 pr0 pl0 text-right pr10">
+		<button type="button" class="btn btn-primary btn-lg btn-block" ng-click="methods.cart.add(p);">
+			<span class="glyphicon glyphicon-plus mr5"></span>
+			<span class="small">Add to Cart</span>
+		</button>
+	</div>
+</div>

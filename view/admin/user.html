@@ -1,0 +1,165 @@
+<div class="col-md-6 col-md-offset-3">
+	<div class="panel panel-default">
+		<div class="panel-heading pt0 pr0">
+			<span class="mt10 dib">
+				<span class="glyphicon glyphicon-user mr5"></span>
+				Users
+			</span>
+			<button type="button" class="btn btn-primary btn-sm mt5 pull-right mr5" ng-click="methods.view.users.addUpdateOpenModal();"><span class="glyphicon glyphicon-plus mr5"></span> Add User</button>
+			<button type="button" class="btn btn-default btn-sm mt5 pull-right mr5" ng-click="methods.view.users.get();"><span class="glyphicon glyphicon-refresh mr5"></span> Refresh</button>
+		</div>
+		<div class="panel-body pt0 pr0 pb0 pl0">
+			<form class="form-horizontal mb0">
+				<div class="form-group has-feedback mb0">
+					<div class="col-md-12">
+						<input type="text" class="form-control" placeholder="Search User" ng-model="formData.usersSearch" />
+						<span class="glyphicon glyphicon-search form-control-feedback" aria-hidden="true"></span>
+					</div>
+				</div>
+			</form>
+		</div>
+		<table class="table table-bordered table-hover table-responsive">
+			<thead>
+				<tr>
+					<th>Name</th>
+					<th><span class="small text-primary">#</span>Mobile</th>
+					<th>Admin</th>
+					<th>Actions</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-repeat="u in data.users | filter: formData.usersSearch">
+					<td>
+						<a ng-href="#!/admin/profile/{{u.mobile}}">
+							<strong>{{ u.name }}</strong>
+						</a>
+					</td>
+					<td ng-bind-html="u.mobile | canteenMobile"></td>
+					<td class="text-center">
+						<span class="glyphicon" ng-class="{'glyphicon-ok text-success': u.isAdmin, 'glyphicon-remove text-danger': !u.isAdmin}"></span>
+					</td>
+					<td class="text-center">
+						<span class="glyphicon glyphicon-eye-open cursor-pointer text-primary mr5 small"></span>
+						<span class="glyphicon glyphicon-pencil cursor-pointer text-primary mr5 small" ng-click="methods.view.users.addUpdateOpenModal(u);"></span>
+						<span class="glyphicon glyphicon-trash cursor-pointer text-danger small" ng-click="methods.view.users.removeOpenModal(u);"></span>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</div>
+
+<div class="modal fade" id="modal-add-user" tabindex="-1" role="dialog" aria-labelledby="modal-add-user-Label">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+    <form novalidate="" name="add" ng-submit="methods.view.users.addUpdate(add.$valid, formData.users.add.isEdit);" class="mb0">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="modal-add-user-Label">
+	        <span class="glyphicon mr5" ng-class="{'glyphicon-pencil': formData.users.add.isEdit, 'glyphicon-plus': !formData.users.add.isEdit}"></span>
+        	<span ng-show="!formData.users.add.isEdit">Add</span><span ng-show="formData.users.add.isEdit">Update</span> User
+        </h4>
+      </div>
+      <div class="modal-body">
+
+      		<div class="form-group" ng-class="{'has-error': add.name.$dirty && add.name.$invalid}">
+				<label for="Name">Name</label>
+				<div class="input-group">
+					<div class="input-group-addon">
+						<span class="glyphicon glyphicon-pencil"></span>
+					</div>
+					<input type="text" class="form-control" id="Name" placeholder="Full Name" autofocus=""
+						   ng-model="formData.users.add.name" name="name" ng-minlength="3" ng-maxlength="20">
+				</div>
+				<div class="alert alert-danger small mb0 pt5 pr10 pb5 pl10" ng-show="add.name.$dirty && add.name.$invalid">
+					<span ng-show="add.name.$error.minlength">Minimum 3 characters Required !</span>
+					<span ng-show="add.name.$error.maxlength">Maximum 20 characters are allowed !</span>
+				</div>
+			</div>
+      		<div class="form-group" ng-class="{'has-error': add.mobile.$dirty && add.mobile.$invalid}">
+				<label for="mobile"><span class="small text-primary">#</span>Mobile <span class="text-danger">*</span></label>
+				<div class="input-group">
+					<div class="input-group-addon">
+						<span class="glyphicon glyphicon-phone"></span>
+					</div>
+					<div class="input-group-addon"><span class="small">+91</span></div>
+					<input type="number" class="form-control" id="mobile" placeholder="Mobile Number" autofocus="" required="" ng-minlength="10" ng-maxlength="10"
+						   ng-model="formData.users.add.mobile" name="mobile">
+				</div>
+				<div class="alert alert-danger small mb0 pt5 pr10 pb5 pl10" ng-show="add.mobile.$dirty && add.mobile.$invalid">
+					<span ng-show="add.mobile.$error.required">Mobile is Required !</span>
+					<span ng-show="add.password.$error.maxlength || add.password.$error.minlength">10 digits required for Mobile !</span>
+				</div>
+			</div>
+			<div class="clearfix"></div>
+			<div class="form-group" ng-class="{'has-error': add.password.$dirty && add.password.$invalid}">
+				<label for="Password">Password <span class="text-danger">*</span></label>
+				<div class="input-group">
+					<div class="input-group-addon">
+						<span class="glyphicon glyphicon-lock"></span>
+					</div>
+					<input type="{{formData.users.add.passwordType != 'text' ? 'password' : formData.users.add.passwordType}}" class="form-control" id="Password" placeholder="Password" required="" ng-minlength="3" ng-maxlength="20"
+						   ng-model="formData.users.add.password" name="password">
+					<div class="input-group-addon cursor-pointer" ng-click="formData.users.add.passwordType == 'password' || formData.users.add.passwordType == '' ? formData.users.add.passwordType = 'text' : formData.users.add.passwordType = 'password'">
+						<span class="glyphicon glyphicon-eye-open" ng-class="{'glyphicon-eye-close': formData.users.add.passwordType == 'text'}"></span>
+					</div>
+				</div>
+				<div class="alert alert-danger small mb0 pt5 pr10 pb5 pl10" ng-show="add.password.$dirty && add.password.$invalid">
+					<span ng-show="add.password.$error.required">Password is Required !</span>
+					<span ng-show="add.password.$error.minlength">Minimum 3 characters Required !</span>
+					<span ng-show="add.password.$error.maxlength">Maximum 20 characters are allowed !</span>
+				</div>
+			</div>
+			<div class="form-group">
+				<label>Admin</label>
+				<div class="clearfix"></div>
+				<div class="btn-group" role="group" aria-label="Admin">
+					<button type="button" class="btn btn-default" ng-class="{'btn-primary': formData.users.add.isAdmin}" ng-click="formData.users.add.isAdmin = true;">Yes</button>
+					<button type="button" class="btn btn-default" ng-class="{'btn-primary': !formData.users.add.isAdmin}" ng-click="formData.users.add.isAdmin = false;">No</button>
+				</div>
+			</div>
+
+      </div>
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-primary" ng-show="!formData.users.add.isEdit">
+        	<span class="glyphicon glyphicon-plus mr5"></span> Add
+        </button>
+        <button type="submit" class="btn btn-primary" ng-show="formData.users.add.isEdit">
+        	<span class="glyphicon glyphicon-save mr5"></span> Update
+        </button>
+        <button type="button" class="btn btn-warning" ng-click="methods.clearForm(formData.users.add);">
+        	<span class="glyphicon glyphicon-remove mr5"></span> Clear
+        </button>
+        <button type="button" class="btn btn-default" data-dismiss="modal">
+        	<span class="glyphicon glyphicon-remove-circle mr5"></span> Close
+        </button>
+      </div>
+    </form>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="modal-remove-user" tabindex="-1" role="dialog" aria-labelledby="modal-remove-user-Label">
+  <div class="modal-dialog modal-sm" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="modal-remove-user-Label">
+        	<span class="glyphicon glyphicon-trash mr5"></span>
+        	Remove User
+        </h4>
+      </div>
+      <div class="modal-body">
+      	Are you sure you want to <strong class="text-danger">Remove</strong> <strong>{{ formData.users.remove.name }}</strong> ?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" ng-click="methods.view.users.remove();">
+        	<span class="glyphicon glyphicon-ok mr5"></span> Yes
+        </button>
+        <button type="button" class="btn btn-default" data-dismiss="modal">
+        	<span class="glyphicon glyphicon-remove mr5"></span> No
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
